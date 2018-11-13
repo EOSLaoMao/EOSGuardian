@@ -4,6 +4,10 @@
 #include <eosio.token/eosio.token.hpp>
 #include "eosguardian.hpp"
 #include "validation.cpp"
+#include "utils.cpp"
+
+using namespace validation;
+using namespace utils;
 
 class eosguardian : contract {
 public:
@@ -11,7 +15,9 @@ public:
     eosguardian( name self ) : contract(self){}
 
     // @abi action setsettings
-    void setsettings(asset cap,
+    void setsettings(
+            asset cap_total,
+            asset cap_tx,
             uint64_t duration){
 
     require_auth(_self);
@@ -21,14 +27,16 @@ public:
     if(itr == s.end()) {
         s.emplace(_self, [&](auto &i) {
             i.account = _self;
-            i.cap = cap;
+            i.cap_total = cap_total;
+            i.cap_tx = cap_tx;
             i.duration = duration;
             i.created_at = now();
             i.updated_at = now();
             });
         } else {
             s.modify(itr, _self, [&](auto &i) {
-                i.cap = cap;
+                i.cap_total = cap_total;
+                i.cap_tx = cap_tx;
                 i.duration = duration;
                 i.updated_at = now();
             });
@@ -36,8 +44,10 @@ public:
     }
 
     // @abi action setwhitelist
-    void setwhitelist(account_name account,
-            asset cap,
+    void setwhitelist(
+            account_name account,
+            asset cap_total,
+            asset cap_tx,
             uint64_t duration){
 
     require_auth(_self);
@@ -47,14 +57,16 @@ public:
     if(itr == w.end()) {
         w.emplace(_self, [&](auto &i) {
             i.account = account;
-            i.cap = cap;
+            i.cap_total = cap_total;
+            i.cap_tx = cap_tx;
             i.duration = duration;
             i.created_at = now();
             i.updated_at = now();
             });
         } else {
             w.modify(itr, _self, [&](auto &i) {
-                i.cap = cap;
+                i.cap_total = cap_total;
+                i.cap_tx = cap_tx;
                 i.duration = duration;
                 i.updated_at = now();
             });
@@ -115,6 +127,9 @@ public:
                     string memo){
 
       require_auth(_self);
+
+      validate_blacklist(_self, to);
+      validate_transfer(_self, to, amount);
 
       INLINE_ACTION_SENDER(eosio::token, transfer)
       (N(eosio.token), {{_self, N(guardianperm)}}, {_self, to, amount, memo});

@@ -12,59 +12,60 @@ using namespace eosio;
 namespace guardian
 {
 
-// @abi table settings i64
-struct settings
-{
-  account_name account;
-  asset cap; // max cap in given duration
-  uint64_t duration; // cap duration
-  uint64_t created_at; // unix time, in seconds
-  uint64_t updated_at; // unix time, in seconds
+    // @abi table settings i64
+    struct settings
+    {
+        account_name account;
+        asset cap_total; // max cap in given duration
+        asset cap_tx; // max cap per transfer
+        uint64_t duration; // cap_total duration
+        uint64_t created_at; // unix time, in seconds
+        uint64_t updated_at; // unix time, in seconds
 
-  account_name primary_key() const { return account; }
-  EOSLIB_SERIALIZE(settings, (account)(cap)(duration)(created_at)(updated_at));
-};
-typedef multi_index<N(settings), settings> settings_table;
+        account_name primary_key() const { return account; }
+        EOSLIB_SERIALIZE(settings, (account)(cap_total)(cap_tx)(duration)(created_at)(updated_at));
+    };
+    typedef multi_index<N(settings), settings> settings_table;
 
-// @abi table blacklist i64
-struct blacklist
-{
-  account_name account;
-  uint64_t created_at; // unix time, in seconds
+    // @abi table blacklist i64
+    struct blacklist
+    {
+        account_name account;
+        uint64_t created_at; // unix time, in seconds
 
-  account_name primary_key() const { return account; }
-  EOSLIB_SERIALIZE(blacklist, (account)(created_at));
-};
-typedef multi_index<N(blacklist), blacklist> blacklist_table;
+        account_name primary_key() const { return account; }
+        EOSLIB_SERIALIZE(blacklist, (account)(created_at));
+    };
+    typedef multi_index<N(blacklist), blacklist> blacklist_table;
 
-// @abi table whitelist i64
-struct whitelist
-{
-  account_name account;
-  asset cap; // max cap in given duration
-  uint64_t duration; // cap duration
-  uint64_t updated_at; // unix time, in seconds
-  uint64_t created_at; // unix time, in seconds
+    // @abi table whitelist i64
+    struct whitelist
+    {
+        account_name account;
+        asset cap_total; // max cap in given duration
+        asset cap_tx; // max cap per transfer
+        uint64_t duration; // cap_total duration
+        uint64_t updated_at; // unix time, in seconds
+        uint64_t created_at; // unix time, in seconds
 
-  account_name primary_key() const { return account; }
-  EOSLIB_SERIALIZE(whitelist, (account)(cap)(duration)(updated_at)(created_at));
-};
-typedef multi_index<N(whitelist), whitelist> whitelist_table;
+        account_name primary_key() const { return account; }
+        EOSLIB_SERIALIZE(whitelist, (account)(cap_total)(cap_tx)(duration)(updated_at)(created_at));
+    };
+    typedef multi_index<N(whitelist), whitelist> whitelist_table;
 
-// @abi table transrecord i64
-struct transrecord
-{
-  account_name to;
-  asset amount; // transfer amount
-  uint64_t created_at; // unix time, in seconds
+    // @abi table txsrecord i64
+    struct txrecord
+    {
+        uint64_t id; // primary key
+        account_name to;
+        asset amount; // transfer amount
+        uint64_t created_at; // unix time, in seconds
 
-  account_name primary_key() const { return to; }
-  EOSLIB_SERIALIZE(transrecord, (to)(amount)(created_at));
-};
-typedef multi_index<N(transrecord), transrecord> transrecord_table;
-
-
-
+        uint64_t primary_key() const { return id; }
+        account_name get_to() const { return to; }
+        EOSLIB_SERIALIZE(txrecord, (id)(to)(amount)(created_at));
+    };
+    typedef multi_index<N(txrecord), txrecord,
+                    indexed_by<N(to), const_mem_fun<txrecord, account_name, &txrecord::get_to>>> txrecord_table;
+            
 }// namespace guardian
-
-
