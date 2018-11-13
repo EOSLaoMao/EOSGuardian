@@ -46,6 +46,7 @@ namespace validation {
         auto idx = t.get_index<N(to)>();
         asset used;
         std::vector<uint64_t> to_delete_ids;
+        // TODO consider `to` account is not in whitelist
         auto first = idx.lower_bound(to);
         auto last = idx.upper_bound(to);
         auto n = now();
