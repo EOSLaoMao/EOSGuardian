@@ -22,6 +22,9 @@ public:
 
     require_auth(_self);
 
+    eosio_assert(cap_total.symbol==EOS_SYMBOL, "only support EOS as cap");
+    eosio_assert(cap_tx.symbol==EOS_SYMBOL, "only support EOS as cap");
+
     settings_table s(_self, _self);
     auto itr = s.find(_self);
     if(itr == s.end()) {
@@ -51,6 +54,9 @@ public:
             uint64_t duration){
 
     require_auth(_self);
+
+    eosio_assert(cap_total.symbol==EOS_SYMBOL, "only support EOS as cap");
+    eosio_assert(cap_tx.symbol==EOS_SYMBOL, "only support EOS as cap");
 
     whitelist_table w(_self, _self);
     auto itr = w.find(account);
@@ -117,6 +123,9 @@ public:
 
       require_auth(_self);
 
+      eosio_assert(net_weight.symbol==EOS_SYMBOL, "only support EOS");
+      eosio_assert(cpu_weight.symbol==EOS_SYMBOL, "only support EOS");
+
       INLINE_ACTION_SENDER(eosiosystem::system_contract, delegatebw)
       (N(eosio), {{_self, N(guardianperm)}}, {_self, to, net_weight, cpu_weight, false});
     }
@@ -127,6 +136,8 @@ public:
                     string memo){
 
       require_auth(_self);
+
+      eosio_assert(quantity.symbol==EOS_SYMBOL, "only support EOS");
 
       validate_blacklist(_self, to);
       validate_transfer(_self, to, quantity);

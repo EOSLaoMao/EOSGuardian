@@ -32,7 +32,7 @@ namespace validation {
         for(int i=0; i<ids.size(); i++)
         {
             uint64_t id = ids[i];
-            print(" | id:", id);
+            //print(" | id:", id);
             auto itr = t.find(id);
             if(itr != t.end()) {
                 t.erase(itr);
@@ -46,14 +46,13 @@ namespace validation {
         auto idx = t.get_index<N(to)>();
         asset used;
         std::vector<uint64_t> to_delete_ids;
-        auto itr = t.get(0);
         auto first = idx.lower_bound(to);
         auto last = idx.upper_bound(to);
         auto n = now();
         uint64_t duration = get_cap_duration(code, to);
         while(first != last && first != idx.end())
         {
-          if((duration*3600 + first->created_at) > n) {
+          if((duration*60 + first->created_at) > n) {
               // not expired
               used += first->quantity;
           } else {
@@ -88,7 +87,8 @@ namespace validation {
         }
         eosio_assert(quantity <= cap_tx, "cap_tx exceeded!");
         asset cap_used = get_cap_used(code, to, quantity);
-        print("cap_used:", cap_used.amount);
+        //print("cap_used:", cap_used.amount);
+        //print("cap_total:", cap_total.amount);
         eosio_assert(cap_used <= cap_total, "cap_total exceeded!");
     }
 }
