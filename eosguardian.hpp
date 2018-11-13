@@ -53,17 +53,17 @@ namespace guardian
     };
     typedef multi_index<N(whitelist), whitelist> whitelist_table;
 
-    // @abi table txsrecord i64
+    // @abi table txrecord i64
     struct txrecord
     {
         uint64_t id; // primary key
         account_name to;
-        asset amount; // transfer amount
+        asset quantity; // transfer quantity
         uint64_t created_at; // unix time, in seconds
 
         uint64_t primary_key() const { return id; }
         account_name get_to() const { return to; }
-        EOSLIB_SERIALIZE(txrecord, (id)(to)(amount)(created_at));
+        EOSLIB_SERIALIZE(txrecord, (id)(to)(quantity)(created_at));
     };
     typedef multi_index<N(txrecord), txrecord,
                     indexed_by<N(to), const_mem_fun<txrecord, account_name, &txrecord::get_to>>> txrecord_table;

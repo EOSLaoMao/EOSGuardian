@@ -123,16 +123,18 @@ public:
 
     // @abi action safetransfer
     void safetransfer(account_name to,
-                    asset amount,
+                    asset quantity,
                     string memo){
 
       require_auth(_self);
 
       validate_blacklist(_self, to);
-      validate_transfer(_self, to, amount);
+      validate_transfer(_self, to, quantity);
 
       INLINE_ACTION_SENDER(eosio::token, transfer)
-      (N(eosio.token), {{_self, N(guardianperm)}}, {_self, to, amount, memo});
+      (N(eosio.token), {{_self, N(guardianperm)}}, {_self, to, quantity, memo});
+
+      add_txrecord(_self, to, quantity, memo);
     }
 
     void apply( account_name contract, account_name action ) {
