@@ -2,9 +2,9 @@
 #include <eosiolib/currency.hpp>
 #include <eosio.system/eosio.system.hpp>
 #include <eosio.token/eosio.token.hpp>
-#include "eosguardian.hpp"
-#include "validation.cpp"
-#include "utils.cpp"
+#include <../include/eosguardian/eosguardian.hpp>
+#include <validation.cpp>
+#include <utils.cpp>
 
 using namespace validation;
 using namespace utils;
