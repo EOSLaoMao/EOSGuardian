@@ -9,6 +9,6 @@ if [ $? -ne 0 ]; then
     docker run --name $CONTAINER -dit --rm -v  `(pwd)`:/$PROJECT eoslaomao/eos-dev:1.2.3
 fi
 
-docker exec $CONTAINER eosiocpp -g /$PROJECT/$PROJECT.abi /$PROJECT/$PROJECT.cpp
-docker exec $CONTAINER eosiocpp -o /$PROJECT/$PROJECT.wast /$PROJECT/$PROJECT.cpp 
+docker exec $CONTAINER eosiocpp -g /$PROJECT/$PROJECT.abi /$PROJECT/src/$PROJECT.cpp
+docker exec $CONTAINER eosiocpp -o /$PROJECT/$PROJECT.wast /$PROJECT/src/$PROJECT.cpp 
 docker cp ../$PROJECT nodeosd:/
