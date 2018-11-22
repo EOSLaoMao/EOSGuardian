@@ -1,5 +1,6 @@
 # EOS Guardian
 
+<a href="https://github.com/EOSLaoMao/EOSGuardian/blob/master/README-CN.md">中文版 README</a>
 
 **EOS Guardian** is an EOS smart contract aiming to provide safer fund management with proper permission settings.
 
@@ -30,13 +31,13 @@ There are two key functions provided by EOS Guardian for now:
 
 ### safedelegate
 
-This function is similar to SafeDelegatebw smart contract. It hardcodes `--transfer` parameter to be always `false`, so that any delegate transactions trigger via `safedelegate` are guaranteed to have ZERO risk of losing any funds.
+This function is similar to SafeDelegatebw smart contract. It hardcodes `--transfer` parameter to be always `false`, so that any delegate transactions triggerred via `safedelegate` are guaranteed to have ZERO risk of losing any funds.
 
 ### safetransfer
 
 This function is a little bit complex.
 
-Image your EOS account was hacked with your `active` or `owner` key compromized. Currently by design, `active` or `owner` key could be used to do anyting including transfering all your EOS tokens out instantly.
+Imagine your EOS account was hacked with your `active` or `owner` key compromized. Currently by design, `active` or `owner` key could be used to do anyting including transfering all your EOS tokens out instantly.
 
 Also, we noticed that there is an EOS account list that your should be careful doing business with. We saw cases that ECAF issued orders to freeze accounts that are associated with these high-risk accounts.
 
