@@ -12,9 +12,9 @@
 
 SafeDelegatebw 将系统合约的 `delegatebw` 抵押接口进行了重新封装，将该接口的第五个参数 --transfer 写死为 false。（这个参数置为 true 的时候，表示给对方抵押的同时，也会把这笔 EOS 的所有权转移给对方，是一个高风险操作）
 
-这样一来，贷出人账户（creditor）只需要在账户上部署 SafeDelegatebw 合约并授权该合约低风险的 delegatebw 抵押接口（而不是系统合约的 delegatebw 接口）给 Bank of Staked，即可完成安全的抵押授权，消除资金转移的风险。
+这样一来，贷出人账户（creditor）只需要在账户上部署 SafeDelegatebw 合约并授权该合约低风险的 delegatebw 抵押接口（而不是系统合约的 delegatebw 接口）给 Bank of Staked，即可完成安全的抵押授权，将资金转移的风险降到 0。
 
-在开发 SafeDelegatebw 的过程中，我的遵循的原则很简单：
+在开发 SafeDelegatebw 的过程中，我们遵循的原则很简单：
 
 1. 重新封装系统合约提供的接口，在新接口中降低资金转移风险。
 2. 使用自定义的低权限进行新接口的调用，而不是直接使用 active 或 owner 权限。
@@ -29,13 +29,13 @@ SafeDelegatebw 开发完成之后，我们一直在思考，上述的规则是�
 
 ### safedelegate 安全抵押功能
 
-该功能和上述的 SafeDelegatebw 合约类似，通过写死系统合约接口的 --transfer 参数为 false 将抵押过程中资金损失的风险降为 0。
+该功能和上述的 SafeDelegatebw 合约类似，通过写死系统合约接口的 --transfer 参数为 false 将抵押过程中资金转移的风险降到 0。
 
 ### safetransfer 安全转账功能
 
 安全转账功能的开发背景：
 
-我们认为，EOS 默认的 active 和 owner 权限结构是有一定的资金风险的。比如某个账户的 active key 被盗，黑客可以瞬间转移账户内所有的代币。
+我们认为，EOS 默认的 active 和 owner 权限结构是有一定的资金风险的。假如某个账户的 active key 被盗，黑客可以瞬间转移账户内所有的代币。
 
 同时我们也注意到，用户有时候是要避免与某些账户发生交易的，比如被 ECAF 加到黑名单的那批账户。有些用户因为与这些账户交易而遇到了麻烦。
 
@@ -45,7 +45,7 @@ SafeDelegatebw 开发完成之后，我们一直在思考，上述的规则是�
 
 2. 提供可调整的单笔转账上限控制，提供可调整的基于时间的转账总额上限控制。
 
-3. 提供自定义黑名单/白名单账户功能，实现接受账户级别的转账限制。
+3. 提供自定义黑名单/白名单账户功能，实现接收方账户级别的转账限制。
 
 
 结合 EOS 的权限系统，EOS 安全卫士的安全转账功能实现了上述 3 个目标。
@@ -63,7 +63,7 @@ cap_tx:       y EOS      // 单笔转账的上限
 duration:     z          // cap_total 总额的时间周期，单位为分钟
 ```
 
-你可以用户账户的 active 权限通过 `setsettings` 接口进行上述参数的设置和调整：
+你可以使用账户的 active 权限通过 `setsettings` 接口进行上述参数的设置和调整：
 
 ```
 cleos push action YOUR_ACCOUNT setsettings '{"cap_toal": "100.0000 EOS", "cap_tx": "1.0000 EOS", "duration": 60}' -p YOUR_ACCOUNT@active
@@ -75,7 +75,7 @@ cleos push action YOUR_ACCOUNT setsettings '{"cap_toal": "100.0000 EOS", "cap_tx
 cleos push action YOUR_ACCOUNT safertansfer '{"to": "SOME_ACCOUNT", "quantity": "1.0000 EOS", "memo": "test"}' -p YOUR_ACCOUNT@safeperm
 ```
 
-任何 `safetransfer` 触发的安全转账交易，都会先做单笔上限和总额上限的检查，检查通过之后，才会最终触发转账操作。一旦检查失败，交易会自动中止，从而确保用户资金安全。
+任何 `safetransfer` 触发的转账交易，都会先进行单笔上限和总额上限的检查，检查通过之后，才会最终触发转账操作。一旦检查失败，交易会自动中止，从而确保用户资金安全。
 
 
 #### 2. 白名单功能
@@ -98,9 +98,9 @@ cleos push action YOUR_ACCOUNT delwhitelist '{"account": "B"}' -p YOUR_ACCOUNT@a
 
 #### 3. 黑名单功能
 
-有些 EOS 账户是最好不与之发生任何交易的，比如 ECAF 加入黑名单中的部分账户，或者任何用户觉得可疑的账户。基于上述考虑，EOS 安全卫士提供了黑名单功能。
+在 EOS 生态中，有时候是要尽量避免与某些账户发生交易的，比如 ECAF 加入黑名单中的部分账户，或者任何用户觉得可疑的账户。基于上述考虑，EOS 安全卫士提供了黑名单功能。
 
-在你将特定账户加入到黑名单之后，任何通过 `safetransfer` 触发的向这些账户发出的转账交易都会自动失败。
+在你将特定账户加入到黑名单之后，任何通过 `safetransfer` 触发的向这些账户发出的转账交易都会自动中止。
 
 你可以通过 `addblacklist` 和 `delblacklist` 接口将账户加入或移除黑名单：
 
@@ -133,13 +133,13 @@ cleos set contract YOUR_ACCOUNT ../safeguardian/
 
 ### 3. 设置权限
 
-接下来需要使用 `scripts/perm.sh` 脚本进行权限设置，该脚本将在 active 权限下面新增两个自定义权限。
+接下来需要使用 `scripts/perm.sh` 脚本进行权限设置，该脚本将在 active 权限下新增两个自定义权限。
 
-第一个权限，`guardianperm`，该权限用于该账户上的 EOS 安全卫士自身的调用，并且需要被授权系统合约的转账权限。该权限只包含一个 code permission。
+第一个权限，`guardianperm`，该权限需要被授权系统合约的转账权限，用于该账户上的 EOS 安全卫士合约自身的调用。该权限只包含一个 eosio.code permission。
 
-第二个权限，`safeperm`，该权限将用于用户调用安全抵押（safedelegate）和安全转账（safetransfer）接口。该权限由 code permission 和一个新的公钥构成，该公钥用于用户的日常使用。
+第二个权限，`safeperm`，该权限将用于用户调用安全抵押（safedelegate）和安全转账（safetransfer）接口。该权限由 eosio.code permission 和一个新的公钥构成，该公钥用于用户的日常使用。
 
-准备好一个用户 safeperm 的新公钥，然后执行权限设置脚本：
+准备好一个用于 safeperm 的新公钥，然后执行权限设置脚本：
 
 
 ```
@@ -152,12 +152,12 @@ cleos set contract YOUR_ACCOUNT ../safeguardian/
 permissions:
      owner     1:    1 OWNER_PUBKEY
         active     1:    1 ACTIVE_PUBKEY
-           safeperm     1:    1 SAFEPERM_PUBKEY, 1 eosguardian1@eosio.code
-           guardianperm     1:    1 eosguardian1@eosio.code
+           safeperm     1:    1 SAFEPERM_PUBKEY, 1 YOUR_ACCOUNT@eosio.code
+           guardianperm     1:    1 YOUR_ACCOUNT@eosio.code
 
 ```
 
-### 设置全局额度配置/白名单/黑名单
+### 设置全局额度/白名单/黑名单配置
 
 配置全局额度参数：
 
