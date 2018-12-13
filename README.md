@@ -1,7 +1,5 @@
 # EOS Guardian / EOS 安全卫士
 
-<img src="./logo.svg" height=100 width=100>
-
 <a href="https://github.com/EOSLaoMao/EOSGuardian/blob/master/README-CN.md">中文版 README</a>
 
 **EOS Guardian** is an EOS smart contract aiming to provide safer fund management with proper permission settings.
