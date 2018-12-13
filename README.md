@@ -1,5 +1,7 @@
 # EOS Guardian / EOS 安全卫士
 
+<img src="./logo.svg" height=100 width=100>
+
 <a href="https://github.com/EOSLaoMao/EOSGuardian/blob/master/README-CN.md">中文版 README</a>
 
 **EOS Guardian** is an EOS smart contract aiming to provide safer fund management with proper permission settings.
@@ -12,16 +14,16 @@ VOTE EOSLaoMao: `eoslaomaocom`
 
 **EOS Guardian** originated from another smart contract [SafeDelegatebw](https://github.com/EOSLaoMao/SafeDelegatebw) which was built by EOSLaoMao team for [Bank of Staked](https://github.com/EOSLaoMao/BankofStaked-CE) creditors.
 
-SafeDelegatebw is a contract that simply wraps up a new `delegatebw` action calling the system contract's `delegatebw` action with the 5th parameter `--transfer` hardcoded to always be `false`. 
+SafeDelegatebw is a contract that simply wraps up a new `delegatebw` action calling the system contract's `delegatebw` action with the 5th parameter `--transfer` hardcoded to always be `false`.
 
 In this way, instead of granting the system contract's `delegatebw` action permission to Bank of Staked (which is risky, because system contract's action could be called with `--transfer` specified to `true`, which will cause ownership change of your funds), creditors can deploy `SafeDelegatebw` and grant customized `delegatebw` action provided by the `SafeDelegatebw` contract.
 
-The rules we followed buiding SafeDelegatebw are simple: 
+The rules we followed buiding SafeDelegatebw are simple:
 
 1. wrap up customized actions to lower the risks of actions provided by system contracts.
 1. use lower-level permission to control (according to the [Principle of Least Priviledge](https://en.wikipedia.org/wiki/Principle_of_least_privilege)) these customized actions instead of using `active` or `owner` keys.
 
-Then we examined means of applying these principles to a broader range of user cases that could benefit from this approach. 
+Then we examined means of applying these principles to a broader range of user cases that could benefit from this approach.
 
 This is how EOS Guardian came about.
 
@@ -110,7 +112,6 @@ cleos push action YOUR_ACCOUNT addblacklist '{"account": "HACKER_ACCOUNT"}' -p Y
 cleos push action YOUR_ACCOUNT delblacklist '{"account": "HACKER_ACCOUNT"}' -p YOUR_ACCOUNT@active
 
 ```
-
 
 ## How to Deploy
 
