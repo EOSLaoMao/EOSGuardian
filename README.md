@@ -1,4 +1,6 @@
-# EOS Guardian / EOS 安全卫士
+<p align="center">
+  <img width="200" height="200" src="./EOSGuardian-logo.svg">
+</p>
 
 <a href="https://github.com/EOSLaoMao/EOSGuardian/blob/master/README-CN.md">中文版 README</a>
 
