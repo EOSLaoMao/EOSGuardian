@@ -1,4 +1,10 @@
-# EOS 安全卫士
+<p align="center">
+  <img width="400" height="400" src="./EOSGuardian-logo.svg">
+</p>
+
+<div align="center">
+  <h1> EOS Guardian / EOS 安全卫士 </h1>
+</div>
 
 <a href="https://github.com/EOSLaoMao/EOSGuardian/blob/master/README.md">ENGLISH README</a>
 
