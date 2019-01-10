@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="400" height="400" src="./EOSGuardian-logo.svg">
+  <img width="300" height="240" src="./EOSGuardian-logo.svg">
 </p>
 
 
