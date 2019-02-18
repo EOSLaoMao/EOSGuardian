@@ -63,7 +63,7 @@ namespace validation {
         asset cap_total;
         asset cap_tx;
         uint64_t duration;
-        auto itr = w.find(to);
+        auto itr = w.find(to.value);
 
         if(itr != w.end()) {
             cap_total = itr->cap_total;
@@ -71,7 +71,7 @@ namespace validation {
             duration = itr->duration;
         } else {
             settings_table s(code, code.value);
-            auto it = s.find(code);
+            auto it = s.find(code.value);
             cap_total = it->cap_total;
             cap_tx = it->cap_tx;
             duration = it->duration;
