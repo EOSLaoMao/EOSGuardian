@@ -93,7 +93,7 @@ public:
         eosio_assert(itr == b.end(), "account already exist in blacklist");
         
         b.emplace(_self, [&](auto &i) {
-            i.account = _self;
+            i.account = account;
             i.created_at = now();
         });
     }
@@ -108,7 +108,6 @@ public:
         eosio_assert(itr != b.end(), "account not found in blacklist");
         b.erase(itr);
     }
-
 
     [[eosio::action]]
     void safedelegate(name to, asset net_weight, asset cpu_weight) {
