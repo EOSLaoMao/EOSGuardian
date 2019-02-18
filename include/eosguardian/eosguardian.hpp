@@ -11,13 +11,10 @@ using namespace eosio;
 
 namespace guardian
 {
-
-    // @abi table settings i64
-    struct settings
-    {
+    struct [[eosio::table, eosio::contract("eosguardian")]] settings {
         name account;
-        asset cap_total; // max cap in given duration
-        asset cap_tx; // max cap per transfer
+        asset cap_total{0, EOS_SYMBOL}; // max cap in given duration
+        asset cap_tx{0, EOS_SYMBOL}; // max cap per transfer
         uint64_t duration; // cap_total duration
         uint64_t created_at; // unix time, in seconds
         uint64_t updated_at; // unix time, in seconds
@@ -27,9 +24,7 @@ namespace guardian
     };
     typedef multi_index<"settings"_n, settings> settings_table;
 
-    // @abi table blacklist i64
-    struct blacklist
-    {
+    struct [[eosio::table, eosio::contract("eosguardian")]] blacklist {
         name account;
         uint64_t created_at; // unix time, in seconds
 
@@ -38,12 +33,10 @@ namespace guardian
     };
     typedef multi_index<"blacklist"_n, blacklist> blacklist_table;
 
-    // @abi table whitelist i64
-    struct whitelist
-    {
+    struct [[eosio::table, eosio::contract("eosguardian")]] whitelist {
         name account;
-        asset cap_total; // max cap in given duration
-        asset cap_tx; // max cap per transfer
+        asset cap_total{0, EOS_SYMBOL}; // max cap in given duration
+        asset cap_tx{0, EOS_SYMBOL}; // max cap per transfer
         uint64_t duration; // cap_total duration
         uint64_t updated_at; // unix time, in seconds
         uint64_t created_at; // unix time, in seconds
@@ -53,19 +46,16 @@ namespace guardian
     };
     typedef multi_index<"whitelist"_n, whitelist> whitelist_table;
 
-    // @abi table txrecord i64
-    struct txrecord
-    {
+    struct [[eosio::table, eosio::contract("eosguardian")]] txrecord {
         uint64_t id; // primary key
         name to;
-        asset quantity; // transfer quantity
+        asset quantity{0, EOS_SYMBOL}; // transfer quantity
         uint64_t created_at; // unix time, in seconds
 
         uint64_t primary_key() const { return id; }
-        name get_to() const { return to; }
+        uint64_t get_to() const { return to.value; }
         EOSLIB_SERIALIZE(txrecord, (id)(to)(quantity)(created_at));
     };
-    typedef multi_index<"txrecord"_n, txrecord,
-                    indexed_by<"to"_n, const_mem_fun<txrecord, name, &txrecord::get_to>>> txrecord_table;
-            
+    typedef multi_index<"txrecord"_n, txrecord, indexed_by<"to"_n, const_mem_fun<txrecord, uint64_t, &txrecord::get_to>>> txrecord_table;
+
 }// namespace guardian

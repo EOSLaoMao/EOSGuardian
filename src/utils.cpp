@@ -5,7 +5,7 @@ using std::string;
 
 namespace utils {
     void add_txrecord(name code, name to, asset quantity, string memo) {
-        txrecord_table t(code, code);
+        txrecord_table t(code, code.value);
         t.emplace(code, [&](auto &i) {
             i.id = t.available_primary_key();
             i.to = to;

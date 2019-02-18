@@ -6,16 +6,16 @@ using std::string;
 namespace validation {
     // validate blacklist
     void validate_blacklist(name code, name to) {
-        blacklist_table b(code, code);
-        auto itr = b.find(to);
+        blacklist_table b(code, code.value);
+        auto itr = b.find(to.value);
         eosio_assert(itr == b.end(), "account in blacklist");
     }
 
     // delete expired records
     void delete_records(name code, const std::vector<uint64_t>& ids=std::vector<uint64_t>()) {
-        txrecord_table t(code, code);
-        for(int i=0; i<ids.size(); i++)
-        {
+        txrecord_table t(code, code.value);
+        
+        for(int i = 0; i < ids.size(); i++) {
             uint64_t id = ids[i];
             //print(" | id:", id);
             auto itr = t.find(id);
@@ -27,16 +27,19 @@ namespace validation {
 
     // get total transfer record
     asset get_cap_used(name code, name to, asset quantity, uint64_t duration) {
-        txrecord_table t(code, code);
+        txrecord_table t(code, code.value);
+        
         auto idx = t.get_index<"to"_n>();
         asset used;
+        
         std::vector<uint64_t> to_delete_ids;
-        auto first = idx.lower_bound(to);
-        auto last = idx.upper_bound(to);
+        
+        auto first = idx.lower_bound(to.value);
+        auto last = idx.upper_bound(to.value);
         auto n = now();
-        while(first != last && first != idx.end())
-        {
-          if((duration*60 + first->created_at) > n) {
+        
+        while(first != last && first != idx.end()) {
+          if((duration * 60 + first->created_at) > n) {
               // not expired
               used += first->quantity;
           } else {
@@ -56,22 +59,24 @@ namespace validation {
 
     // validate transfer
     void validate_transfer(name code, name to, asset quantity) {
-        whitelist_table w(code, code);
+        whitelist_table w(code, code.value);
         asset cap_total;
         asset cap_tx;
         uint64_t duration;
         auto itr = w.find(to);
+
         if(itr != w.end()) {
             cap_total = itr->cap_total;
             cap_tx = itr->cap_tx;
             duration = itr->duration;
         } else {
-            settings_table s(code, code);
+            settings_table s(code, code.value);
             auto it = s.find(code);
             cap_total = it->cap_total;
             cap_tx = it->cap_tx;
             duration = it->duration;
         }
+        
         eosio_assert(quantity <= cap_tx, "cap_tx exceeded!");
         asset cap_used = get_cap_used(code, to, quantity, duration);
         //print("cap_used:", cap_used.amount);
