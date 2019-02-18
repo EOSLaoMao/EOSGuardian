@@ -12,8 +12,6 @@ class [[eosio::contract]] eosguardian : contract {
 public:
     using contract::contract;
 
-    eosguardian(name self): contract(self){}
-
     [[eosio::action]]
     void setsettings(asset cap_total, asset cap_tx, uint64_t duration) {
 
@@ -121,7 +119,7 @@ public:
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
 
         INLINE_ACTION_SENDER(eosiosystem::system_contract, delegatebw)
-        (N(eosio), {{_self, N(guardianperm)}}, {_self, to, net_weight, cpu_weight, false});
+        ("eosio"_n, {{_self, "guardianperm"_n}}, {_self, to, net_weight, cpu_weight, false});
     }
 
     [[eosio::action]]
@@ -135,7 +133,7 @@ public:
         validate_transfer(_self, to, quantity);
 
         INLINE_ACTION_SENDER(eosio::token, transfer)
-        (N(eosio.token), {{_self, N(guardianperm)}}, {_self, to, quantity, memo});
+        ("eosio.token"_n, {{_self, "guardianperm"_n}}, {_self, to, quantity, memo});
 
         add_txrecord(_self, to, quantity, memo);
     }
