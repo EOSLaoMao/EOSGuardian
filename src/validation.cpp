@@ -5,14 +5,14 @@ using std::string;
 
 namespace validation {
     // validate blacklist
-    void validate_blacklist(account_name code, account_name to) {
+    void validate_blacklist(name code, name to) {
         blacklist_table b(code, code);
         auto itr = b.find(to);
         eosio_assert(itr == b.end(), "account in blacklist");
     }
 
     // delete expired records
-    void delete_records(account_name code, const std::vector<uint64_t>& ids=std::vector<uint64_t>()) {
+    void delete_records(name code, const std::vector<uint64_t>& ids=std::vector<uint64_t>()) {
         txrecord_table t(code, code);
         for(int i=0; i<ids.size(); i++)
         {
@@ -26,9 +26,9 @@ namespace validation {
     }
 
     // get total transfer record
-    asset get_cap_used(account_name code, account_name to, asset quantity, uint64_t duration) {
+    asset get_cap_used(name code, name to, asset quantity, uint64_t duration) {
         txrecord_table t(code, code);
-        auto idx = t.get_index<N(to)>();
+        auto idx = t.get_index<"to"_n>();
         asset used;
         std::vector<uint64_t> to_delete_ids;
         auto first = idx.lower_bound(to);
@@ -55,7 +55,7 @@ namespace validation {
     }
 
     // validate transfer
-    void validate_transfer(account_name code, account_name to, asset quantity) {
+    void validate_transfer(name code, name to, asset quantity) {
         whitelist_table w(code, code);
         asset cap_total;
         asset cap_tx;
