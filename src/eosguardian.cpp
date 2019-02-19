@@ -138,22 +138,12 @@ public:
     }
 };
 
-extern "C" {
-    void apply(uint64_t receiver, uint64_t code, uint64_t action) {
-        auto self = receiver;
-        if (code == self) {
-            switch(action) {
-                EOSIO_DISPATCH_HELPER(eosguardian,
-                    (safedelegate)
-                    (safetransfer)
-                    (setsettings)
-                    (setwhitelist)
-                    (delwhitelist)
-                    (setblacklist)
-                    (delblacklist)
-                )
-            };
-        }
-        
-    }
-}
+EOSIO_DISPATCH(eosguardian, 
+    (safedelegate)
+    (safetransfer)
+    (setsettings)
+    (setwhitelist)
+    (delwhitelist)
+    (setblacklist)
+    (delblacklist)
+)
