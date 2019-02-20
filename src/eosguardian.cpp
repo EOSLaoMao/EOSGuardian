@@ -130,9 +130,6 @@ public:
         validate_blacklist(_self, to);
         validate_transfer(_self, to, quantity);
 
-        INLINE_ACTION_SENDER(eosio::token, transfer)
-        ("eosio.token"_n, {{_self, "guardianperm"_n}}, {_self, to, quantity, memo});
-
         add_txrecord(_self, to, quantity, memo);
     }
 };
@@ -145,8 +142,8 @@ extern "C" {
 
         if (code == name("ifttt").value) {
             if (action == name("safetransfer").value) {
-                print("prepare to execute safetransfer")
-                auto data = unpack_action_data<eosguardian:safetransfer>();
+                print("prepare to execute safetransfer");
+                eosio::execute_action(name(code), name(action), &eosguardian::safetransfer);
             }
             
         } else if (receiver == code) {
