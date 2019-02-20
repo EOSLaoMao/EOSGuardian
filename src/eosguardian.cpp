@@ -116,9 +116,6 @@ public:
 
         eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
-
-        INLINE_ACTION_SENDER(eosiosystem::system_contract, delegatebw)
-        ("eosio"_n, {{_self, "guardianperm"_n}}, {_self, to, net_weight, cpu_weight, false});
     }
 
     void safetransfer(name to, asset quantity, string memo){
@@ -144,6 +141,9 @@ extern "C" {
             if (action == name("safetransfer").value) {
                 print("prepare to execute safetransfer");
                 eosio::execute_action(name(code), name(action), &eosguardian::safetransfer);
+            } else if (action == name("safedelegate").value) {
+                print("prepare to execute safedelegate");
+                eosio::execute_action(name(code), name(action), &eosguardian::safedelegate);
             }
             
         } else if (receiver == code) {
