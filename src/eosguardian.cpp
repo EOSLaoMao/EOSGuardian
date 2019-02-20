@@ -1,4 +1,5 @@
 #include <eosiolib/eosio.hpp>
+#include <eosiolib/print.hpp>
 #include <eosio.system/eosio.system.hpp>
 #include <eosio.token/eosio.token.hpp>
 #include "../include/eosguardian/eosguardian.hpp"
@@ -109,7 +110,6 @@ public:
         b.erase(itr);
     }
 
-    [[eosio::action]]
     void safedelegate(name to, asset net_weight, asset cpu_weight) {
 
         require_auth(_self);
@@ -121,7 +121,6 @@ public:
         ("eosio"_n, {{_self, "guardianperm"_n}}, {_self, to, net_weight, cpu_weight, false});
     }
 
-    [[eosio::action]]
     void safetransfer(name to, asset quantity, string memo){
 
         require_auth(_self);
@@ -138,12 +137,28 @@ public:
     }
 };
 
-EOSIO_DISPATCH(eosguardian, 
-    (safedelegate)
-    (safetransfer)
-    (setsettings)
-    (setwhitelist)
-    (delwhitelist)
-    (setblacklist)
-    (delblacklist)
-)
+extern "C" {
+    void apply(uint64_t receiver, uint64_t code, uint64_t action) {
+        print(name(receiver));
+        print(name(code));
+        print(name(action));
+
+        if (code == name("ifttt").value) {
+            if (action == name("safetransfer").value) {
+                print("prepare to execute safetransfer")
+                auto data = unpack_action_data<eosguardian:safetransfer>();
+            }
+            
+        } else if (receiver == code) {
+            switch(action) {
+                EOSIO_DISPATCH_HELPER(eosguardian,
+                    (setsettings)
+                    (setwhitelist)
+                    (delwhitelist)
+                    (setblacklist)
+                    (delblacklist)
+                )
+            };
+        }
+    }
+}

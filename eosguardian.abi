@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Tue Feb 19 16:52:41 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Wed Feb 20 11:50:29 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -33,42 +33,6 @@
                 {
                     "name": "account",
                     "type": "name"
-                }
-            ]
-        },
-        {
-            "name": "safedelegate",
-            "base": "",
-            "fields": [
-                {
-                    "name": "to",
-                    "type": "name"
-                },
-                {
-                    "name": "net_weight",
-                    "type": "asset"
-                },
-                {
-                    "name": "cpu_weight",
-                    "type": "asset"
-                }
-            ]
-        },
-        {
-            "name": "safetransfer",
-            "base": "",
-            "fields": [
-                {
-                    "name": "to",
-                    "type": "name"
-                },
-                {
-                    "name": "quantity",
-                    "type": "asset"
-                },
-                {
-                    "name": "memo",
-                    "type": "string"
                 }
             ]
         },
@@ -215,16 +179,6 @@
         {
             "name": "delwhitelist",
             "type": "delwhitelist",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "safedelegate",
-            "type": "safedelegate",
-            "ricardian_contract": ""
-        },
-        {
-            "name": "safetransfer",
-            "type": "safetransfer",
             "ricardian_contract": ""
         },
         {
