@@ -73,7 +73,7 @@ public:
     }
 
     [[eosio::action]]
-    void delwhitelist(name account){
+    void delwhitelist(name account) {
 
         require_auth(_self);
 
@@ -84,7 +84,7 @@ public:
     }
 
     [[eosio::action]]
-    void setblacklist(name account){
+    void setblacklist(name account) {
 
         require_auth(_self);
 
@@ -99,7 +99,7 @@ public:
     }
 
     [[eosio::action]]
-    void delblacklist(name account){
+    void delblacklist(name account) {
 
         require_auth(_self);
 
@@ -122,7 +122,7 @@ public:
     }
 
     [[eosio::action]]
-    void safetransfer(name to, asset quantity, string memo){
+    void safetransfer(name to, asset quantity, string memo) {
 
         require_auth(_self);
 
