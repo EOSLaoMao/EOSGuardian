@@ -137,11 +137,11 @@ extern "C" {
         print(name(code));
         print(name(action));
 
-        if (code == name("ifttt").value) {
-            if (action == name("safetransfer").value) {
+        if (receiver != code) {
+            if (code == name("eosio.token").value && action == name("transfer").value) {
                 print("prepare to execute safetransfer");
                 eosio::execute_action(name(code), name(action), &eosguardian::safetransfer);
-            } else if (action == name("safedelegate").value) {
+            } else if (code == name("eosio.system").value && action == name("delegatebw").value) {
                 print("prepare to execute safedelegate");
                 eosio::execute_action(name(code), name(action), &eosguardian::safedelegate);
             }
