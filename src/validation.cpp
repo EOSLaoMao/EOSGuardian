@@ -30,7 +30,7 @@ namespace validation {
         txrecord_table t(code, code.value);
         
         auto idx = t.get_index<"to"_n>();
-        asset used;
+        asset used{0, EOS_SYMBOL};
         
         std::vector<uint64_t> to_delete_ids;
         
@@ -39,14 +39,14 @@ namespace validation {
         auto n = now();
         
         while(first != last && first != idx.end()) {
-          if((duration * 60 + first->created_at) > n) {
-              // not expired
-              used += first->quantity;
-          } else {
-              // expired record should be deleted
-              to_delete_ids.emplace_back(first->id);
-          }
-          first++;
+            if((duration * 60 + first->created_at) > n) {
+                // not expired
+                used += first->quantity;
+            } else {
+                // expired record should be deleted
+                to_delete_ids.emplace_back(first->id);
+            }
+            first++;
         }
         // add quantity to used
         used += quantity;
@@ -60,8 +60,8 @@ namespace validation {
     // validate transfer
     void validate_transfer(name code, name to, asset quantity) {
         whitelist_table w(code, code.value);
-        asset cap_total;
-        asset cap_tx;
+        asset cap_total{0, EOS_SYMBOL};
+        asset cap_tx{0, EOS_SYMBOL};
         uint64_t duration;
         auto itr = w.find(to.value);
 
