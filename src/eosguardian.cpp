@@ -1,5 +1,4 @@
 #include <eosiolib/eosio.hpp>
-#include <eosiolib/print.hpp>
 #include <eosio.system/eosio.system.hpp>
 #include <eosio.token/eosio.token.hpp>
 #include "../include/eosguardian/eosguardian.hpp"
@@ -112,37 +111,31 @@ public:
 
     void safedelegate(name to, asset net_weight, asset cpu_weight) {
 
-        require_auth(_self);
+        // validate_account(from);
 
         eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
     }
 
-    void safetransfer(name to, asset quantity, string memo){
-
-        require_auth(_self);
+    void safetransfer(name from, name to, asset quantity, string memo){
 
         eosio_assert(quantity.symbol == EOS_SYMBOL, "only support EOS");
 
-        validate_blacklist(_self, to);
-        validate_transfer(_self, to, quantity);
+        validate_account(from);
+        validate_blacklist(from, to);
+        validate_transfer(from, to, quantity);
 
-        add_txrecord(_self, to, quantity, memo);
+        add_txrecord(from, to, quantity, memo);
     }
 };
 
 extern "C" {
     void apply(uint64_t receiver, uint64_t code, uint64_t action) {
-        print(name(receiver));
-        print(name(code));
-        print(name(action));
 
         if (receiver != code) {
             if (code == name("eosio.token").value && action == name("transfer").value) {
-                print("prepare to execute safetransfer");
                 eosio::execute_action(name(code), name(action), &eosguardian::safetransfer);
             } else if (code == name("eosio.system").value && action == name("delegatebw").value) {
-                print("prepare to execute safedelegate");
                 eosio::execute_action(name(code), name(action), &eosguardian::safedelegate);
             }
             
