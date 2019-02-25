@@ -109,9 +109,9 @@ public:
         b.erase(itr);
     }
 
-    void safedelegate(name to, asset net_weight, asset cpu_weight) {
+    void safedelegate(name from, name to, asset net_weight, asset cpu_weight) {
 
-        // validate_account(from);
+        validate_account(from);
 
         eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
