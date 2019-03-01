@@ -83,4 +83,11 @@ namespace validation {
         //print("cap_total:", cap_total.amount);
         eosio_assert(cap_used <= cap_total, "cap_total exceeded!");
     }
+
+    // validate account
+    void validate_account(name code) {
+        settings_table s(code, code.value);
+        auto idx = s.find(code.value);
+        eosio_assert(idx != s.end(), "need to be set settings before use");
+    }
 }
