@@ -13,6 +13,29 @@ public:
     using contract::contract;
 
     [[eosio::action]]
+    void setuser(name user, uint64_t duration) {
+
+        require_auth(_self);
+
+        users_table s(_self, user.value);
+        auto itr = s.find(user.value);
+        
+        if(itr == s.end()) {
+            s.emplace(_self, [&](auto &i) {
+                i.account = user;
+                i.duration = duration;
+                i.created_at = now();
+                i.updated_at = now();
+            });
+        } else {
+            s.modify(itr, _self, [&](auto &i) {
+                i.duration = duration;
+                i.updated_at = now();
+            });
+        }
+    }
+
+    [[eosio::action]]
     void setsettings(name user, asset cap_total, asset cap_tx, uint64_t duration) {
 
         require_auth(_self);
@@ -111,7 +134,7 @@ public:
 
     void safedelegate(name from, name to, asset net_weight, asset cpu_weight) {
 
-        validate_account(_self, from);
+        validate_user(_self, from);
 
         eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
@@ -121,7 +144,7 @@ public:
 
         eosio_assert(quantity.symbol == EOS_SYMBOL, "only support EOS");
 
-        validate_account(_self, from);
+        validate_user(_self, from);
         validate_blacklist(_self, from, to);
         validate_transfer(_self, from, to, quantity);
 
@@ -142,6 +165,7 @@ extern "C" {
         } else if (receiver == code) {
             switch(action) {
                 EOSIO_DISPATCH_HELPER(eosguardian,
+                    (setuser)
                     (setsettings)
                     (setwhitelist)
                     (delwhitelist)

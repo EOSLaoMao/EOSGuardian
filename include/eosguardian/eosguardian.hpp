@@ -11,11 +11,23 @@ using namespace eosio;
 
 namespace guardian
 {
+    //users table
+    struct [[eosio::table, eosio::contract("eosguardian")]] users {
+        name account;
+        uint64_t duration; // subscription duration in minutes
+        uint64_t created_at; // unix time, in seconds
+        uint64_t updated_at; // unix time, in seconds
+
+        uint64_t primary_key() const { return account.value; }
+        EOSLIB_SERIALIZE(users, (account)(duration)(created_at)(updated_at));
+    };
+    typedef multi_index<"users"_n, users> users_table;
+
     struct [[eosio::table, eosio::contract("eosguardian")]] settings {
         name account;
         asset cap_total{0, EOS_SYMBOL}; // max cap in given duration
         asset cap_tx{0, EOS_SYMBOL}; // max cap per transfer
-        uint64_t duration; // cap_total duration
+        uint64_t duration; // cap_total duration in minutes
         uint64_t created_at; // unix time, in seconds
         uint64_t updated_at; // unix time, in seconds
 
@@ -37,7 +49,7 @@ namespace guardian
         name account;
         asset cap_total{0, EOS_SYMBOL}; // max cap in given duration
         asset cap_tx{0, EOS_SYMBOL}; // max cap per transfer
-        uint64_t duration; // cap_total duration
+        uint64_t duration; // cap_total duration in minutes
         uint64_t updated_at; // unix time, in seconds
         uint64_t created_at; // unix time, in seconds
 

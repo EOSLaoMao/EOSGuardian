@@ -85,9 +85,9 @@ namespace validation {
     }
 
     // validate account
-    void validate_account(name code, name user) {
-        settings_table s(code, user.value);
+    void validate_user(name code, name user) {
+        users_table s(code, user.value);
         auto idx = s.find(user.value);
-        eosio_assert(idx != s.end(), "need to be set settings before use");
+        eosio_assert(idx != s.end(), "User does not exist!");
     }
 }
