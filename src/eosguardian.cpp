@@ -135,6 +135,10 @@ public:
     void safedelegate(name from, name to, asset net_weight, asset cpu_weight) {
 
         validate_user(_self, from);
+        auto status = get_user_status(_self, from);
+        if(status == USER_STATUS_EXPIRED) {
+            return;
+        }
 
         eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
@@ -145,6 +149,10 @@ public:
         eosio_assert(quantity.symbol == EOS_SYMBOL, "only support EOS");
 
         validate_user(_self, from);
+        auto status = get_user_status(_self, from);
+        if(status == USER_STATUS_EXPIRED) {
+            return;
+        }
         validate_blacklist(_self, from, to);
         validate_transfer(_self, from, to, quantity);
 

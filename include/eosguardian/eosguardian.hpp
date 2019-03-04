@@ -11,6 +11,8 @@ using namespace eosio;
 
 namespace guardian
 {
+    static const uint64_t USER_STATUS_EXPIRED = 0;
+    static const uint64_t USER_STATUS_EFFECTIVE = 1;
     //users table
     struct [[eosio::table, eosio::contract("eosguardian")]] users {
         name account;

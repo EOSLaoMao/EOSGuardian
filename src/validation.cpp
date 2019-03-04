@@ -84,10 +84,22 @@ namespace validation {
         eosio_assert(cap_used <= cap_total, "cap_total exceeded!");
     }
 
-    // validate account
+    // validate user
     void validate_user(name code, name user) {
         users_table s(code, user.value);
         auto idx = s.find(user.value);
         eosio_assert(idx != s.end(), "User does not exist!");
+    }
+    // get user status
+    uint64_t get_user_status(name code, name user) {
+        uint64_t status = USER_STATUS_EFFECTIVE;
+        users_table s(code, user.value);
+        auto idx = s.find(user.value);
+        auto n = now();
+        if((idx->duration * 60 + idx->created_at) < n) {
+            //user subscription expired;
+            status = USER_STATUS_EXPIRED;
+        }
+        return status;
     }
 }
