@@ -5,15 +5,15 @@ using std::string;
 
 namespace validation {
     // validate blacklist
-    void validate_blacklist(name code, name to) {
-        blacklist_table b(code, code.value);
+    void validate_blacklist(name code, name user, name to) {
+        blacklist_table b(code, user.value);
         auto itr = b.find(to.value);
         eosio_assert(itr == b.end(), "account in blacklist");
     }
 
     // delete expired records
-    void delete_records(name code, const std::vector<uint64_t>& ids=std::vector<uint64_t>()) {
-        txrecord_table t(code, code.value);
+    void delete_records(name code, name user, const std::vector<uint64_t>& ids=std::vector<uint64_t>()) {
+        txrecord_table t(code, user.value);
         
         for(int i = 0; i < ids.size(); i++) {
             uint64_t id = ids[i];
@@ -26,8 +26,8 @@ namespace validation {
     }
 
     // get total transfer record
-    asset get_cap_used(name code, name to, asset quantity, uint64_t duration) {
-        txrecord_table t(code, code.value);
+    asset get_cap_used(name code, name user, name to, asset quantity, uint64_t duration) {
+        txrecord_table t(code, user.value);
         
         auto idx = t.get_index<"to"_n>();
         asset used{0, EOS_SYMBOL};
@@ -52,14 +52,14 @@ namespace validation {
         used += quantity;
 
         // delete expired orders
-        delete_records(code, to_delete_ids);
+        delete_records(code, user, to_delete_ids);
 
         return used;
     }
 
     // validate transfer
-    void validate_transfer(name code, name to, asset quantity) {
-        whitelist_table w(code, code.value);
+    void validate_transfer(name code, name user, name to, asset quantity) {
+        whitelist_table w(code, user.value);
         asset cap_total{0, EOS_SYMBOL};
         asset cap_tx{0, EOS_SYMBOL};
         uint64_t duration;
@@ -70,24 +70,24 @@ namespace validation {
             cap_tx = itr->cap_tx;
             duration = itr->duration;
         } else {
-            settings_table s(code, code.value);
-            auto it = s.find(code.value);
+            settings_table s(code, user.value);
+            auto it = s.find(user.value);
             cap_total = it->cap_total;
             cap_tx = it->cap_tx;
             duration = it->duration;
         }
         
         eosio_assert(quantity <= cap_tx, "cap_tx exceeded!");
-        asset cap_used = get_cap_used(code, to, quantity, duration);
+        asset cap_used = get_cap_used(code, user, to, quantity, duration);
         //print("cap_used:", cap_used.amount);
         //print("cap_total:", cap_total.amount);
         eosio_assert(cap_used <= cap_total, "cap_total exceeded!");
     }
 
     // validate account
-    void validate_account(name code) {
-        settings_table s(code, code.value);
-        auto idx = s.find(code.value);
+    void validate_account(name code, name user) {
+        settings_table s(code, user.value);
+        auto idx = s.find(user.value);
         eosio_assert(idx != s.end(), "need to be set settings before use");
     }
 }

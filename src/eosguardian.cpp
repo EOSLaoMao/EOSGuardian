@@ -13,19 +13,19 @@ public:
     using contract::contract;
 
     [[eosio::action]]
-    void setsettings(asset cap_total, asset cap_tx, uint64_t duration) {
+    void setsettings(name user, asset cap_total, asset cap_tx, uint64_t duration) {
 
         require_auth(_self);
 
         eosio_assert(cap_total.symbol == EOS_SYMBOL, "only support EOS as cap");
         eosio_assert(cap_tx.symbol == EOS_SYMBOL, "only support EOS as cap");
 
-        settings_table s(_self, _self.value);
-        auto itr = s.find(_self.value);
+        settings_table s(_self, user.value);
+        auto itr = s.find(user.value);
         
         if(itr == s.end()) {
             s.emplace(_self, [&](auto &i) {
-                i.account = _self;
+                i.account = user;
                 i.cap_total = cap_total;
                 i.cap_tx = cap_tx;
                 i.duration = duration;
@@ -43,14 +43,14 @@ public:
     }
 
     [[eosio::action]]
-    void setwhitelist(name account, asset cap_total, asset cap_tx, uint64_t duration) {
+    void setwhitelist(name user, name account, asset cap_total, asset cap_tx, uint64_t duration) {
 
         require_auth(_self);
 
         eosio_assert(cap_total.symbol == EOS_SYMBOL, "only support EOS as cap");
         eosio_assert(cap_tx.symbol == EOS_SYMBOL, "only support EOS as cap");
 
-        whitelist_table w(_self, _self.value);
+        whitelist_table w(_self, user.value);
         auto itr = w.find(account.value);
 
         if(itr == w.end()) {
@@ -73,22 +73,22 @@ public:
     }
 
     [[eosio::action]]
-    void delwhitelist(name account) {
+    void delwhitelist(name user, name account) {
 
         require_auth(_self);
 
-        whitelist_table w(_self, _self.value);
+        whitelist_table w(_self, user.value);
         auto itr = w.find(account.value);
         eosio_assert(itr != w.end(), "account not found in whitelist");
         w.erase(itr);
     }
 
     [[eosio::action]]
-    void setblacklist(name account) {
+    void setblacklist(name user, name account) {
 
         require_auth(_self);
 
-        blacklist_table b(_self, _self.value);
+        blacklist_table b(_self, user.value);
         auto itr = b.find(account.value);
         eosio_assert(itr == b.end(), "account already exist in blacklist");
         
@@ -99,11 +99,11 @@ public:
     }
 
     [[eosio::action]]
-    void delblacklist(name account) {
+    void delblacklist(name user, name account) {
 
         require_auth(_self);
 
-        blacklist_table b(_self, _self.value);
+        blacklist_table b(_self, user.value);
         auto itr = b.find(account.value);
         eosio_assert(itr != b.end(), "account not found in blacklist");
         b.erase(itr);
@@ -111,7 +111,7 @@ public:
 
     void safedelegate(name from, name to, asset net_weight, asset cpu_weight) {
 
-        validate_account(from);
+        validate_account(_self, from);
 
         eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
         eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
@@ -121,11 +121,11 @@ public:
 
         eosio_assert(quantity.symbol == EOS_SYMBOL, "only support EOS");
 
-        validate_account(from);
-        validate_blacklist(from, to);
-        validate_transfer(from, to, quantity);
+        validate_account(_self, from);
+        validate_blacklist(_self, from, to);
+        validate_transfer(_self, from, to, quantity);
 
-        add_txrecord(from, to, quantity, memo);
+        add_txrecord(_self, from, to, quantity, memo);
     }
 };
 

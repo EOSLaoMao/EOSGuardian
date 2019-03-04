@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Mon Feb 25 14:46:57 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Mon Mar  4 06:34:43 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -21,6 +21,10 @@
             "base": "",
             "fields": [
                 {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
                     "name": "account",
                     "type": "name"
                 }
@@ -30,6 +34,10 @@
             "name": "delwhitelist",
             "base": "",
             "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
                 {
                     "name": "account",
                     "type": "name"
@@ -41,6 +49,10 @@
             "base": "",
             "fields": [
                 {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
                     "name": "account",
                     "type": "name"
                 }
@@ -50,6 +62,10 @@
             "name": "setsettings",
             "base": "",
             "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
                 {
                     "name": "cap_total",
                     "type": "asset"
@@ -98,6 +114,10 @@
             "name": "setwhitelist",
             "base": "",
             "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
                 {
                     "name": "account",
                     "type": "name"
