@@ -134,9 +134,8 @@ public:
 
     void safedelegate(name from, name to, asset net_weight, asset cpu_weight) {
 
-        validate_user(_self, from);
-        auto status = get_user_status(_self, from);
-        if(status == USER_STATUS_EXPIRED) {
+        auto status = get_user_status(from);
+        if(status != USER_STATUS_EFFECTIVE) {
             return;
         }
 
@@ -148,15 +147,14 @@ public:
 
         eosio_assert(quantity.symbol == EOS_SYMBOL, "only support EOS");
 
-        validate_user(_self, from);
-        auto status = get_user_status(_self, from);
-        if(status == USER_STATUS_EXPIRED) {
-            return;
+        auto status = get_user_status(from);
+        if(status != USER_STATUS_EFFECTIVE) {
+          return;
         }
-        validate_blacklist(_self, from, to);
-        validate_transfer(_self, from, to, quantity);
+        validate_blacklist(from, to);
+        validate_transfer(from, to, quantity);
 
-        add_txrecord(_self, from, to, quantity, memo);
+        add_txrecord(from, to, quantity, memo);
     }
 };
 
@@ -168,6 +166,8 @@ extern "C" {
                 eosio::execute_action(name(code), name(action), &eosguardian::safetransfer);
             } else if (code == name("eosio.system").value && action == name("delegatebw").value) {
                 eosio::execute_action(name(code), name(action), &eosguardian::safedelegate);
+            } else if (action == name("setlink").value) {
+                validate_user(name(code));
             }
             
         } else if (receiver == code) {

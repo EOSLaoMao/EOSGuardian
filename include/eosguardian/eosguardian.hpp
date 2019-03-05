@@ -11,8 +11,11 @@ using namespace eosio;
 
 namespace guardian
 {
-    static const uint64_t USER_STATUS_EXPIRED = 0;
+    static const uint64_t USER_STATUS_NONE = 0;
     static const uint64_t USER_STATUS_EFFECTIVE = 1;
+    static const uint64_t USER_STATUS_EXPIRED = 2;
+    //TODO change CODE to actual account this contract deployed to
+    static const name CODE = "voter1"_n;
     //users table
     struct [[eosio::table, eosio::contract("eosguardian")]] users {
         name account;
