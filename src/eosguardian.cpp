@@ -154,9 +154,9 @@ public:
             return;
         }
 
-        // all transfers to 'eosio' will pass
-        if(to == name("eosio")) {
-            return
+        // all transfers to 'eosio.stake' will pass check
+        if(to == name("eosio.stake")) {
+            return;
         }
         validate_blacklist(from, to);
         validate_transfer(from, to, quantity);
