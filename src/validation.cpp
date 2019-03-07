@@ -96,10 +96,11 @@ namespace validation {
         users_table s(CODE, user.value);
         auto idx = s.find(user.value);
         if(idx == s.end()) {
-            return status;
+            return USER_STATUS_NONE;
         }
         auto n = now();
-        if((idx->duration * 60 + idx->created_at) >= n) {
+        //user updated_at to determine user status
+        if((idx->duration * 60 + idx->updated_at) >= n) {
             status = USER_STATUS_EFFECTIVE;
         } else {
             //user subscription expired;
