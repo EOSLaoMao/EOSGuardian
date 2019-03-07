@@ -132,18 +132,6 @@ public:
         b.erase(itr);
     }
 
-    void safedelegate(name from, name to, asset net_weight, asset cpu_weight, bool transfer) {
-
-        auto status = get_user_status(from);
-        if(status != USER_STATUS_EFFECTIVE) {
-            return;
-        }
-
-        eosio_assert(net_weight.symbol == EOS_SYMBOL, "only support EOS");
-        eosio_assert(cpu_weight.symbol == EOS_SYMBOL, "only support EOS");
-        eosio_assert(transfer == false, "EOS Guardian: transfer should be set to false!");
-    }
-
     void safetransfer(name from, name to, asset quantity, string memo){
 
         eosio_assert(quantity.symbol == EOS_SYMBOL, "only support EOS");
@@ -171,8 +159,6 @@ extern "C" {
         if (receiver != code) {
             if (code == name("eosio.token").value && action == name("transfer").value) {
                 eosio::execute_action(name(code), name(action), &eosguardian::safetransfer);
-            } else if (code == name("eosio.system").value && action == name("delegatebw").value) {
-                eosio::execute_action(name(code), name(action), &eosguardian::safedelegate);
             } else if (action == name("setlink").value) {
                 validate_user(name(code));
             }
