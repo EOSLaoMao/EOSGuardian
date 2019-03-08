@@ -18,3 +18,5 @@ docker exec $PROJECT_NAME-eos-dev eosio-cpp --contract $PROJECT_NAME \
     -I /contracts/eosio.system/include \
 
 docker exec $PROJECT_NAME-eos-dev cp /$PROJECT_NAME.abi /$PROJECT_NAME.wasm /$PROJECT_NAME/
+
+docker cp ../$PROJECT_NAME nodeosd:/

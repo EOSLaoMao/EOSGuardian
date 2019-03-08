@@ -1,5 +1,5 @@
 {
-    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Mon Feb 25 14:46:57 2019",
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Thu Mar  7 08:35:33 2019",
     "version": "eosio::abi/1.1",
     "structs": [
         {
@@ -21,6 +21,10 @@
             "base": "",
             "fields": [
                 {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
                     "name": "account",
                     "type": "name"
                 }
@@ -30,6 +34,10 @@
             "name": "delwhitelist",
             "base": "",
             "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
                 {
                     "name": "account",
                     "type": "name"
@@ -41,6 +49,10 @@
             "base": "",
             "fields": [
                 {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
                     "name": "account",
                     "type": "name"
                 }
@@ -50,6 +62,10 @@
             "name": "setsettings",
             "base": "",
             "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
                 {
                     "name": "cap_total",
                     "type": "asset"
@@ -95,9 +111,27 @@
             ]
         },
         {
+            "name": "setuser",
+            "base": "",
+            "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "duration",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "setwhitelist",
             "base": "",
             "fields": [
+                {
+                    "name": "user",
+                    "type": "name"
+                },
                 {
                     "name": "account",
                     "type": "name"
@@ -134,6 +168,28 @@
                 },
                 {
                     "name": "created_at",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "users",
+            "base": "",
+            "fields": [
+                {
+                    "name": "account",
+                    "type": "name"
+                },
+                {
+                    "name": "duration",
+                    "type": "uint64"
+                },
+                {
+                    "name": "created_at",
+                    "type": "uint64"
+                },
+                {
+                    "name": "updated_at",
                     "type": "uint64"
                 }
             ]
@@ -192,6 +248,11 @@
             "ricardian_contract": ""
         },
         {
+            "name": "setuser",
+            "type": "setuser",
+            "ricardian_contract": ""
+        },
+        {
             "name": "setwhitelist",
             "type": "setwhitelist",
             "ricardian_contract": ""
@@ -215,6 +276,13 @@
         {
             "name": "txrecord",
             "type": "txrecord",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "users",
+            "type": "users",
             "index_type": "i64",
             "key_names": [],
             "key_types": []
